@@ -1,0 +1,64 @@
+---
+const { icon, name, link } = Astro.props;
+const isCurrentPage = link == Astro.url.pathname;
+// const itemContent = `<div class="icon">${icon}</div><p class="name">${name}</p>`;
+---
+
+<style>
+    .toolbarItem {
+        /* margin: auto; */
+        text-align: center;
+        min-width: 10em;
+        max-width: 15em;
+        height: 2em;
+        line-height: 2em;
+        border-radius: 1em;
+        margin-bottom: 1em;
+
+        background-color: red;        
+        color: black;
+        box-shadow: 0.4em 0.4em;
+        transition: 0.3s;
+        
+        /* Text non-selectable */
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+    
+    .toolbarItem.current {
+        filter: brightness(95%);
+        transform: translate(0.2em, 0.2em);
+        box-shadow: 0.2em 0.2em;
+    }
+
+    .toolbarItem:not(.current):hover {
+        transform: translate(-0.17em, -0.17em);
+        box-shadow: 0.57em 0.57em;
+    }
+    
+    .icon {
+        position: absolute;
+        margin-left: 1em;
+        width: 1em;
+    }
+    
+    p {
+        margin: 0;
+    }
+    
+    a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+
+<div class=`toolbarItem ${isCurrentPage ? "current": ""}`>
+    {
+        isCurrentPage ? 
+            <div class="icon">{icon}</div><p>{name}</p> :
+            <a href={link}><div class="icon">{icon}</div><p>{name}</p>
+</a>
+    }
+</div>

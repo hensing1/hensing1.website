@@ -1,0 +1,20 @@
+---
+import ToolbarItem from "./ToolbarItem.astro";
+
+const pages = await Object.values(
+        import.meta.glob("../pages/*.astro", { eager: true })
+    ).toSorted((page1: any, page2: any) => page1.index - page2.index);
+---
+
+<!-- <style>
+    #toolbar {
+    }
+</style> -->
+
+<div id="toolbar">
+    {
+        pages.map((page: any) => {
+            return <ToolbarItem icon={page.icon} name={page.title} link={page.url || "/"} />
+        })
+    }
+</div>
