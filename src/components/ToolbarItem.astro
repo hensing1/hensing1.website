@@ -27,7 +27,7 @@ const isCurrentPage = link == Astro.url.pathname;
     }
     
     .toolbarItem.current {
-        filter: brightness(95%);
+        /* filter: brightness(95%); */
         transform: translate(0.2em, 0.2em);
         box-shadow: 0.2em 0.2em;
     }
@@ -58,7 +58,6 @@ const isCurrentPage = link == Astro.url.pathname;
     {
         isCurrentPage ? 
             <div class="icon">{icon}</div><p>{name}</p> :
-            <a href={link}><div class="icon">{icon}</div><p>{name}</p>
-</a>
+            <a href={link}><div class="icon">{icon}</div><p>{name}</p></a>
     }
 </div>

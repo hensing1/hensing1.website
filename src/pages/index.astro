@@ -1,43 +1,17 @@
 ---
 import Grid from "../layouts/Grid.astro";
+import { db, FaktDesTages } from "astro:db";
 
 export const icon = "🏠";
 export const title = "Home";
 export const index = 0;
+
+const fakten = await db.select().from(FaktDesTages);
 ---
 
 <Grid icon={icon}>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
-	<p>hihi</p>
+	<p>Die Fakten sind:</p>
+	<ul>
+		{ fakten.map(({ fakt }) => <li>{fakt}</li>) }
+	</ul>
 </Grid>

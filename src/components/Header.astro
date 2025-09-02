@@ -1,5 +1,8 @@
 ---
 import '../styles/global.css';
+import { db, DingObenRechts } from "astro:db";
+
+const sprueche = await db.select().from(DingObenRechts);
 ---
 <style>
     .floater {
@@ -17,5 +20,5 @@ import '../styles/global.css';
 
 <h1><em>hensing1.website</em></h1>
 <div class="floater">
-    <p>GPT-free! <span style="font-family: 'DotMatrixBold'">Wow!!</span></p>
+    <p>{sprueche[1].spruch}</p>
 </div>

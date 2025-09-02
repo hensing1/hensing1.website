@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "hensing1.website",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/db": "^0.17.1",
     "astro": "^5.13.4"
   }
 }
