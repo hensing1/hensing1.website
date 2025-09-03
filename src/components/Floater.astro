@@ -1,0 +1,50 @@
+---
+import "../styles/global.css";
+---
+
+<script>
+    const sprueche = [
+        "GPT free!",
+        "Bumm!",
+        "Made with actual<br/>human tears!",
+        "Pow!",
+        "Intelligence free -<br/>artificial or otherwise!",
+        "Now in color!",
+        "???",
+    ];
+
+    const i = Math.floor(Math.random() * sprueche.length);
+    document.getElementById("floater")!.firstElementChild!.innerHTML =
+        sprueche[i];
+</script>
+
+<style>
+    @keyframes bounce {
+        from {
+            scale: 90%;
+        }
+        to {
+            scale: 110%;
+        }
+    }
+    #floater {
+        position: absolute;
+        right: 2em;
+        top: 1.5em;
+        rotate: 20deg;
+        z-index: 1000;
+        /* animation-name: bounce; */
+        animation-duration: 0.4s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-timing-function: ease-in-out;
+    }
+    #floater > p {
+        font-family: "DotMatrix";
+        font-size: 15pt;
+    }
+</style>
+
+<div id="floater">
+    <p></p>
+</div>

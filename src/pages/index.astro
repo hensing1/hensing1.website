@@ -1,5 +1,6 @@
 ---
 import Grid from "../layouts/Grid.astro";
+import Floater from "../components/Floater.astro";
 import { db, FaktDesTages } from "astro:db";
 
 export const icon = "🏠";
@@ -10,6 +11,7 @@ const fakten = await db.select().from(FaktDesTages);
 ---
 
 <Grid icon={icon}>
+	<Floater />
 	<p>Die Fakten sind:</p>
 	<ul>
 		{ fakten.map(({ fakt }) => <li>{fakt}</li>) }

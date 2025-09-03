@@ -1,24 +1,29 @@
 ---
 import '../styles/global.css';
-import { db, DingObenRechts } from "astro:db";
 
-const sprueche = await db.select().from(DingObenRechts);
+const numColors = 6;
 ---
+
 <style>
-    .floater {
-        position: absolute;
-        right: 2em;
-        top: 4em;
-        rotate: 20deg;
-        line-height: 0.3em;
-    }
-    .floater > p {
-        font-family: 'DotMatrix';
-        font-size: 16pt;
+    .coolLine {
+        width: 100%;
+        height: 0.6em;
     }
 </style>
 
 <h1><em>hensing1.website</em></h1>
-<div class="floater">
-    <p>{sprueche[1].spruch}</p>
+<div class="coolLine">
+    {
+        Array.from(Array(numColors).keys()).map((index) => {
+            const deg = 30 + (180 / numColors) * index;
+            const style =
+                `height: 100%;`+
+                `width: ${100 / numColors}%;` +
+                `float:left;` +
+                `background-color: oklch(80% 0.2577 ${deg}deg);` +
+                // `background-color: hsl(${deg}deg 70 50);` +
+                `transform: skew(-20deg);`;
+            return <div style={style}></div>
+        })
+    }
 </div>

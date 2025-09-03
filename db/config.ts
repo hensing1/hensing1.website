@@ -6,13 +6,7 @@ const FaktDesTages = defineTable({
   }
 });
 
-const DingObenRechts = defineTable({
-  columns: {
-    spruch: column.text(),
-  }
-})
-
 // https://astro.build/db/config
 export default defineDb({
-  tables: { DingObenRechts, FaktDesTages },
+  tables: { FaktDesTages },
 });
