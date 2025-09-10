@@ -1,29 +1,38 @@
 ---
 import '../styles/global.css';
+import Floater from './Floater.astro';
 
+const { addFloater } = Astro.props;
 const numColors = 6;
 ---
 
 <style>
+    .headingContainer {
+        position: relative;
+    }
     .coolLine {
         width: 100%;
         height: 0.6em;
     }
 </style>
 
-<h1><em>hensing1.website</em></h1>
-<div class="coolLine">
-    {
-        Array.from(Array(numColors).keys()).map((index) => {
-            const deg = 30 + (180 / numColors) * index;
-            const style =
-                `height: 100%;`+
-                `width: ${100 / numColors}%;` +
-                `float:left;` +
-                `background-color: oklch(80% 0.2577 ${deg}deg);` +
-                // `background-color: hsl(${deg}deg 70 50);` +
-                `transform: skew(-20deg);`;
-            return <div style={style}></div>
-        })
-    }
+<div class="headingContainer">
+    <h1><em>hensing1.website</em></h1>
+    <!-- <div style="position: absolute; top: 0; right: 0; background: tomato">AAAAA</div> -->
+    { addFloater && <Floater /> }
+    <div class="coolLine">
+        {
+            Array.from(Array(numColors).keys()).map((index) => {
+                const deg = 30 + (180 / numColors) * index;
+                const style =
+                    `height: 100%;`+
+                    `width: ${100 / numColors}%;` +
+                    `float:left;` +
+                    `background-color: oklch(80% 0.2577 ${deg}deg);` +
+                    // `background-color: hsl(${deg}deg 70 50);` +
+                    `transform: skew(-20deg);`;
+                return <div style={style}></div>
+            })
+        }
+    </div>
 </div>

@@ -4,7 +4,7 @@ import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import Toolbar from "../components/Toolbar.astro";
 
-const { icon } = Astro.props;
+const { icon, addFloater } = Astro.props;
 const faviconString = `data:image/svg+xml,` + 
     `<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>` +
         `<text y=%22.9em%22 font-size=%2290%22>${icon}</text>`+
@@ -25,6 +25,8 @@ const faviconString = `data:image/svg+xml,` +
                     "menu content"
                     "footer footer";
                 grid-template-columns: 1fr 3fr;
+                max-width: 1000px;
+                margin: auto;
                 /* gap: 5px; */
                 /* background-color: #2196F3; */
                 /* padding: 5px; */
@@ -39,6 +41,8 @@ const faviconString = `data:image/svg+xml,` +
             }
             .container > div.toolbar {
                 grid-area: menu;
+                margin-left: 0.5em;
+                margin-right: 1em;
             }
             .container > div.content {
                 grid-area: content;
@@ -50,10 +54,10 @@ const faviconString = `data:image/svg+xml,` +
 	</head>
 	<body>
         <div class="container">
-            <div class="header"> <Header /> </div>
+            <div class="header"> <Header addFloater={addFloater}/> </div>
             <div class="toolbar"> <Toolbar /> </div>
-            <div class="content"><slot /></div>
-            <div class="footer"> <Footer/></div>
+            <div class="content"> <slot /> </div>
+            <div class="footer"> <Footer/> </div>
         </div>
 	</body>
 </html>

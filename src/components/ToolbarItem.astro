@@ -8,8 +8,9 @@ const isCurrentPage = link == Astro.url.pathname;
     .toolbarItem {
         /* margin: auto; */
         text-align: center;
-        min-width: 10em;
-        max-width: 15em;
+        /* min-width: 10em; */
+        /* max-width: 15em; */
+        width: 2em;
         height: 2em;
         line-height: 2em;
         border-radius: 1em;
@@ -36,11 +37,9 @@ const isCurrentPage = link == Astro.url.pathname;
         transform: translate(-0.17em, -0.17em);
         box-shadow: 0.57em 0.57em;
     }
-    
-    .icon {
-        position: absolute;
-        margin-left: 1em;
-        width: 1em;
+
+    .toolbarItem .name {
+        display: none;
     }
     
     p {
@@ -49,15 +48,36 @@ const isCurrentPage = link == Astro.url.pathname;
     
     a {
         display: block;
+        width: 100%;
+        height: 100%;
         text-decoration: none;
         color: inherit;
+    }
+    
+    @media screen and (min-width: 636px) {
+        
+        .toolbarItem {
+            min-width: 10em;
+            max-width: 15em;
+        }
+
+        .toolbarItem .icon {
+            position: absolute;
+            margin-left: 1em;
+            width: 1em;
+        }
+    
+
+        .toolbarItem .name{
+            display: inline;
+        }
     }
 </style>
 
 <div class=`toolbarItem ${isCurrentPage ? "current": ""}`>
     {
         isCurrentPage ? 
-            <div class="icon">{icon}</div><p>{name}</p> :
-            <a href={link}><div class="icon">{icon}</div><p>{name}</p></a>
+            <div class="icon">{icon}</div><p class="name">{name}</p> :
+            <a href={link}><div class="icon">{icon}</div><p class="name">{name}</p></a>
     }
 </div>
