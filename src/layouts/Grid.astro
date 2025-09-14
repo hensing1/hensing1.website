@@ -4,7 +4,7 @@ import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import Toolbar from "../components/Toolbar.astro";
 
-const { icon, addFloater } = Astro.props;
+const { icon, title, addFloater } = Astro.props;
 const faviconString = `data:image/svg+xml,` + 
     `<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>` +
         `<text y=%22.9em%22 font-size=%2290%22>${icon}</text>`+
@@ -16,7 +16,7 @@ const faviconString = `data:image/svg+xml,` +
 		<meta charset="utf-8" />
         <link rel="icon" href={faviconString}>
 		<meta name="viewport" content="width=device-width" />
-		<title>wobsite</title>
+		<title>{title} // hensing1.website</title>
         <style>
             .container {
                 display: grid;
