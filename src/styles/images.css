@@ -1,0 +1,9 @@
+.gallery {
+    position: relative;
+}
+
+.gallery img {
+    /* display: flex; */
+    width: 45%;
+    margin: 3px;
+}

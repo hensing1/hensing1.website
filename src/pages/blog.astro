@@ -1,0 +1,43 @@
+---
+import Grid from "../layouts/Grid.astro";
+import "../styles/images.css";
+
+import { db, eq, Pic, BlogPageFeature } from "astro:db";
+
+export const icon = "👋";
+export const title = "Blog";
+export const index = 1;
+
+const featuredImages = await db.select()
+    .from(BlogPageFeature)
+    .innerJoin(Pic, eq(Pic.id, BlogPageFeature.picID));
+
+console.log(featuredImages);
+---
+
+<style>
+
+    h1 {
+        border-bottom: 2px solid black;
+    }
+    h2 {
+    }
+    /* h3 {
+        border-bottom: solid black 1px;
+    } */
+</style>
+
+<Grid icon={icon} title={title}>
+    <h1>Bloggo</h1>
+    
+    <h2>Aktuell</h2>
+    <p>Hi ich bin in Kanada!!!</p>
+    
+    <div class="gallery">
+        {
+            featuredImages.map( ({Pic}) => 
+                <img src={Pic.basePath + Pic.name}, title={Pic.alt} />
+            )
+        }
+    </div>
+</Grid>
