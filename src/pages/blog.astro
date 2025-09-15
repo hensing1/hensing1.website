@@ -1,5 +1,6 @@
 ---
 import Grid from "../layouts/Grid.astro";
+import Masonry from "../components/Masonry.astro";
 import "../styles/images.css";
 
 import { db, eq, Pic, BlogPageFeature } from "astro:db";
@@ -12,7 +13,7 @@ const featuredImages = await db.select()
     .from(BlogPageFeature)
     .innerJoin(Pic, eq(Pic.id, BlogPageFeature.picID));
 
-console.log(featuredImages);
+const images = featuredImages.map(({Pic}) => ({path: Pic.basePath + Pic.name, title: Pic.alt}));
 ---
 
 <style>
@@ -28,16 +29,10 @@ console.log(featuredImages);
 </style>
 
 <Grid icon={icon} title={title}>
-    <h1>Bloggo</h1>
+    <h1>Pinterest des Grauens</h1>
     
     <h2>Aktuell</h2>
     <p>Hi ich bin in Kanada!!!</p>
     
-    <div class="gallery">
-        {
-            featuredImages.map( ({Pic}) => 
-                <img src={Pic.basePath + Pic.name}, title={Pic.alt} />
-            )
-        }
-    </div>
+    <Masonry images={images} numColumns={2} />
 </Grid>

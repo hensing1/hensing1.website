@@ -1,0 +1,36 @@
+---
+const { images, numColumns } = Astro.props;
+---
+<style>
+.imageGridContainer {
+    display: flex;             /* place columns side by side */
+    gap: 8px;                 /* horizontal gap between columns */
+}
+
+.column {
+    flex: 1;                   /* equal column width */
+    display: flex;
+    flex-direction: column;    /* stack images vertically */
+    gap: 8px;                 /* vertical gap between images */
+}
+
+.column img {
+    width: 100%;               /* fill column width */
+    height: auto;              /* preserve aspect ratio */
+    display: block;            /* remove inline whitespace */
+    border-radius: 0.2em;
+}
+</style>
+<div class="imageGridContainer">
+    {
+        [...Array(numColumns).keys()].map((colNum) => 
+            <div class="column" >
+                {
+                    images.filter((_: any, index: number) => index % numColumns == colNum).map((image: any) =>
+                        <img src={image.path} title={image.title} />
+                    )
+                }
+            </div>
+        )
+    }
+</div>
