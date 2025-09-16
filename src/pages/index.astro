@@ -1,5 +1,5 @@
 ---
-import Grid from "../layouts/Grid.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { db, FaktDesTages } from "astro:db";
 
 export const icon = "🏠";
@@ -9,9 +9,9 @@ export const index = 0;
 const fakten = await db.select().from(FaktDesTages);
 ---
 
-<Grid icon={icon} title={title} addFloater={true}>
+<BaseLayout icon={icon} title={title} addFloater={true}>
 	<p>Die Fakten sind:</p>
 	<ul>
 		{ fakten.map(({ fakt }) => <li>{fakt}</li>) }
 	</ul>
-</Grid>
+</BaseLayout>

@@ -6,10 +6,13 @@ const pages = await Object.values(
     ).toSorted((page1: any, page2: any) => page1.index - page2.index);
 ---
 
-<!-- <style>
+<style>
     #toolbar {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 1em;
     }
-</style> -->
+</style>
 
 <div id="toolbar">
     {

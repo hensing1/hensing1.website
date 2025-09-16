@@ -1,5 +1,5 @@
 ---
-import Grid from "../../layouts/Grid.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import { db, eq, BlogPage, BlogSection } from "astro:db";
 import SectionComponent from "../../components/BlogPageSection.astro";
 
@@ -20,11 +20,20 @@ let sections = await db.select().from(BlogSection)
     .where(eq(BlogSection.page, pageTitle));
 ---
 
-<Grid title="Blog" icon={emoji}>
-    <a href="/blog" class="redlink">&lt;- zurück</a>
-    <h1>{pageTitle}</h1>
-
+<style>
+    h1 {
+        text-align: center;
+        border-bottom: 1px solid black;
+        /* font-family: 'DotMatrix'; */
+    }
+    #back {
+        float: right;
+    }
+</style>
+<BaseLayout title="Blog" icon={emoji}>
+    <h1>{pageTitle}!</h1>
+    <a href="/blog" id="back" class="redlink">&lt;- zurück</a>
     {
         sections.map((section) => <SectionComponent section={section} />)
     }
-</Grid>
+</BaseLayout>

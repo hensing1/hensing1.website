@@ -1,5 +1,5 @@
 ---
-import Grid from "../layouts/Grid.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import Masonry from "../components/ImageMasonry.astro";
 
 import { db, eq, Pic, BlogPageFeature } from "astro:db";
@@ -23,11 +23,11 @@ const images = featuredImages.map(({Pic}) => ({path: Pic.basePath + Pic.name, ti
     
 </style>
 
-<Grid icon={icon} title={title}>
+<BaseLayout icon={icon} title={title}>
     <h1>Pinterest des Grauens</h1>
     
     <h2>Aktuell</h2>
     <p class="text-with-button">Hi ich bin in Kanada!!!<a href="blog/Kanada" class="redlink">zur Blogseite -&gt;</a></p>
     
-    <Masonry images={images} numColumns={2} />
-</Grid>
+    <Masonry images={images} numColumns={3} />
+</BaseLayout>
