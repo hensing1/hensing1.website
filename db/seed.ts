@@ -16,7 +16,7 @@ export default async function seed() {
 		{ id: 2, name: '2025:09:10_15:40:07_ILCE-6400.webp', basePath: '/img/', alt: ''},
 		{ id: 3, name: '2025:09:10_15:40:57_ILCE-6400.webp', basePath: '/img/', alt: ''},
 		{ id: 4, name: '2025:09:10_15:42:15_ILCE-6400.webp', basePath: '/img/', alt: ''},
-		{ id: 5, name: '2025:09:10_16:26:48_Pixel_8.webp', basePath: '/img/', alt: 'alallaalalalalalalaalalalalalalalalalalalalalalaallaallalalalalalalalalalalala'},
+		{ id: 5, name: '2025:09:10_16:26:48_Pixel_8.webp', basePath: '/img/', alt: ''},
 		{ id: 6, name: '2025:09:10_17:21:23_Pixel_8.webp', basePath: '/img/', alt: ''},
 		{ id: 7, name: '2025:09:10_17:21:29_Pixel_8.webp', basePath: '/img/', alt: ''},
 		{ id: 8, name: '2025:09:10_17:22:34_Pixel_8.webp', basePath: '/img/', alt: ''},
