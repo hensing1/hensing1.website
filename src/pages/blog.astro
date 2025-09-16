@@ -1,7 +1,6 @@
 ---
 import Grid from "../layouts/Grid.astro";
-import Masonry from "../components/Masonry.astro";
-import "../styles/images.css";
+import Masonry from "../components/ImageMasonry.astro";
 
 import { db, eq, Pic, BlogPageFeature } from "astro:db";
 
@@ -21,18 +20,14 @@ const images = featuredImages.map(({Pic}) => ({path: Pic.basePath + Pic.name, ti
     h1 {
         border-bottom: 2px solid black;
     }
-    h2 {
-    }
-    /* h3 {
-        border-bottom: solid black 1px;
-    } */
+    
 </style>
 
 <Grid icon={icon} title={title}>
     <h1>Pinterest des Grauens</h1>
     
     <h2>Aktuell</h2>
-    <p>Hi ich bin in Kanada!!!</p>
+    <p class="text-with-button">Hi ich bin in Kanada!!!<a href="blog/Kanada" class="redlink">zur Blogseite -&gt;</a></p>
     
     <Masonry images={images} numColumns={2} />
 </Grid>

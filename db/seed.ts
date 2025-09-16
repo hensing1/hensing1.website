@@ -1,6 +1,6 @@
-import { db, FaktDesTages, Pic, BlogPageFeature,
-	// Tag, PicTags, BlogPage, BlogSection,
-	// BlogEntry, BlogPageSections, BlogSectionEntries, BlogEntryPics
+import { db, FaktDesTages, Pic, BlogPage, BlogPageFeature, BlogSection, BlogEntry,
+	// Tag, PicTags,
+	BlogEntryPics
 } from 'astro:db';
 
 // https://astro.build/db/seed
@@ -12,11 +12,11 @@ export default async function seed() {
 	
 	await db.insert(Pic).values([
 		{ id: 0, name: '2025:09:10_15:38:00_ILCE-6400.webp', basePath: '/img/', alt: ''},
-		{ id: 1, name: '2025:09:10_15:39:43_ILCE-6400.webp', basePath: '/img/', alt: ''},
+		{ id: 1, name: '2025:09:10_15:39:43_ILCE-6400.webp', basePath: '/img/', alt: 'Ich bin ein Flugzeug :)'},
 		{ id: 2, name: '2025:09:10_15:40:07_ILCE-6400.webp', basePath: '/img/', alt: ''},
 		{ id: 3, name: '2025:09:10_15:40:57_ILCE-6400.webp', basePath: '/img/', alt: ''},
 		{ id: 4, name: '2025:09:10_15:42:15_ILCE-6400.webp', basePath: '/img/', alt: ''},
-		{ id: 5, name: '2025:09:10_16:26:48_Pixel_8.webp', basePath: '/img/', alt: ''},
+		{ id: 5, name: '2025:09:10_16:26:48_Pixel_8.webp', basePath: '/img/', alt: 'alallaalalalalalalaalalalalalalalalalalalalalalaallaallalalalalalalalalalalala'},
 		{ id: 6, name: '2025:09:10_17:21:23_Pixel_8.webp', basePath: '/img/', alt: ''},
 		{ id: 7, name: '2025:09:10_17:21:29_Pixel_8.webp', basePath: '/img/', alt: ''},
 		{ id: 8, name: '2025:09:10_17:22:34_Pixel_8.webp', basePath: '/img/', alt: ''},
@@ -186,13 +186,22 @@ export default async function seed() {
 		{ id: 172, name: '2025:09:12_20:34:50_Pixel_8.webp', basePath: '/img/', alt: ''},
 	]);
 
+	await db.insert(BlogPage).values([
+		{ title: "Kanada", emoji: "🇨🇦" },
+	]);
+
 	const features = [48, 72, 77, 92, 108, 124, 143, 154, 167, 171, 172]
 	await db.insert(BlogPageFeature).values(
 		features.map((num) => {
 			return { picID: num }
 		})
 	);
-	
+
+	await db.insert(BlogSection).values([
+		{ id: 0, page: "Kanada", title: "Hinreise" },
+		{ id: 1, page: "Kanada", title: "Calgary" },
+	]);
+
 	// await db.insert(Tag).values([
 	// 	{ name: "Flugzeug" },
 	// ]);
@@ -203,37 +212,22 @@ export default async function seed() {
 	// 	{ pic: 3, tag: "Flugzeug"},
 	// ]);
 	
-	// await db.insert(BlogPage).values([
-	// 	{ title: "Kanada" },
-	// ])
+	await db.insert(BlogEntry).values([
+		{ id: 0, section: 0, date: new Date(2025, 8, 10) },
+		{ id: 1, section: 1, title: "Numero Uno", date: new Date(2025, 8, 11) },
+		{ id: 2, section: 1, title: "Numeros Dos", date: new Date(2025, 8, 12) },
+	]);
 
-	// await db.insert(BlogSection).values([
-	// 	{ id: 0, title: "Hinreise" },
-	// 	{ id: 1, title: "Calgary" },
-	// ]);
-	
-	// await db.insert(BlogEntry).values([
-	// 	{ id: 0, date: new Date(2025, 8, 10), title: "Hinflug" },
-	// 	{ id: 1, date: new Date(2025, 8, 11) },
-	// ]);
+	const entriesPics = [
+		Array.from(Array(75).keys()),
+		Array.from(Array(164 - 75).keys()).map(n => Number(n) + 75),
+		Array.from(Array(173 - 164).keys()).map(n => n + 164),
+	];
 
-	// // await db.insert(BlogPageSections).values([
-	// 	// { blogPage: "Kanada", blogSection: 0 },
-	// 	// { blogPage: "Kanada", blogSection: 1 },
-	// // ])
+	for (const [entryIndex, entryPics] of entriesPics.entries()) {
+		await db.insert(BlogEntryPics).values(
+			entryPics.map((pic: number) => ({blogEntry: entryIndex, pic: pic, featured: true}))
+	);
 
-	// await db.insert(BlogSectionEntries).values([
-	// 	{ blogSection: 0, blogEntry: 0 },
-	// 	{ blogSection: 1, blogEntry: 1 },
-	// ]);
-
-	// await db.insert(BlogEntryPics).values([
-	// 	{ blogEntry: 0, pic: 1 },
-	// 	{ blogEntry: 0, pic: 2 },
-	// 	{ blogEntry: 0, pic: 3 },
-	// 	{ blogEntry: 0, pic: 4 },
-	// 	{ blogEntry: 1, pic: 5 },
-	// 	{ blogEntry: 1, pic: 6 },
-	// 	{ blogEntry: 1, pic: 7 },
-	// ]);
+	}
 }

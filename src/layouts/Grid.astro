@@ -16,7 +16,7 @@ const faviconString = `data:image/svg+xml,` +
 		<meta charset="utf-8" />
         <link rel="icon" href={faviconString}>
 		<meta name="viewport" content="width=device-width" />
-		<title>{title} // hensing1.website</title>
+		<title>{title} | hensing1.website</title>
         <style>
             .container {
                 display: grid;
@@ -24,7 +24,7 @@ const faviconString = `data:image/svg+xml,` +
                     "header header"
                     "menu content"
                     "footer footer";
-                grid-template-columns: 1fr 3fr;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
                 max-width: 1000px;
                 margin: auto;
                 /* gap: 5px; */

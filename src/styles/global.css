@@ -22,6 +22,30 @@
     font-display: swap;
 }
 
-.schwubbi {
-    color: red;
+
+a.redlink {
+    display: inline-block;
+    background-color: lightseagreen;
+    line-height: 1.5em;
+    border-radius: 0.75em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    color: black;
+    box-shadow: 0.2em 0.2em;
+    text-decoration: none;
+    text-align: center;
+    font-size: medium;
+    user-select: none;
+    transition: 0.3s;
+}
+
+a.redlink:hover {
+    transform: translate(-0.2em, -0.2em);
+    box-shadow: 0.4em 0.4em;
+}
+
+p.text-with-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

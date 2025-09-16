@@ -35,57 +35,45 @@ const BlogPageFeature = defineTable({
 //   }
 // });
 
-// const BlogPage = defineTable({
-//   columns: {
-//     title: column.text()
-//   }
-// });
+const BlogPage = defineTable({
+  columns: {
+    title: column.text({primaryKey: true}),
+    emoji: column.text()
+  }
+});
 
-// const BlogSection = defineTable({
-//   columns: {
-//     id: column.number({primaryKey: true}),
-//     title: column.text()
-//   }
-// })
+const BlogSection = defineTable({
+  columns: {
+    id: column.number({primaryKey: true}),
+    page: column.text({references: () => BlogPage.columns.title}),
+    title: column.text({optional: true})
+  }
+});
 
-// const BlogEntry = defineTable({
-//   columns: {
-//     id: column.number({primaryKey: true}),
-//     title: column.text({optional: true}),
-//     date: column.date()
-//   }
-// });
+const BlogEntry = defineTable({
+  columns: {
+    id: column.number({primaryKey: true}),
+    section: column.number({references: () => BlogSection.columns.id}),
+    title: column.text({optional: true}),
+    date: column.date()
+  }
+});
 
-// // relates BlogPage to BlogSections
-// const BlogPageSections = defineTable({
-//   columns: {
-//     blogPage: column.text({references: () => BlogPage.columns.title}),
-//     blogSection: column.number({references: () => BlogSection.columns.id})
-//   }
-// });
-
-// // relates BlogSection to BlogEntries
-// const BlogSectionEntries = defineTable({
-//   columns: {
-//     blogSection: column.number({references: () => BlogSection.columns.id}),
-//     blogEntry: column.number({references: () => BlogEntry.columns.id})
-//   }
-// });
-
-// // relates BlogEntry to Pics
-// const BlogEntryPics = defineTable({
-//   columns: {
-//     blogEntry: column.number({references: () => BlogEntry.columns.id}),
-//     pic: column.number({references: () => Pic.columns.id}),
-//   }
-// });
+// relates BlogEntry to Pics
+const BlogEntryPics = defineTable({
+  columns: {
+    blogEntry: column.number({references: () => BlogEntry.columns.id}),
+    pic: column.number({references: () => Pic.columns.id}),
+    featured: column.boolean(), // should this picture be featured on the blog page
+  }
+});
 
 
 // https://astro.build/db/config
 export default defineDb({
   tables: {
-    FaktDesTages, Pic, BlogPageFeature,
-    // Tag, PicTags, BlogPage, BlogSection, BlogEntry,
-    // BlogPageSections, BlogSectionEntries, BlogEntryPics
+    FaktDesTages, Pic, BlogPage, BlogPageFeature, BlogSection, BlogEntry, BlogEntryPics
+    // Tag, PicTags, BlogEntry,
+    // BlogSectionEntries
   },
 });

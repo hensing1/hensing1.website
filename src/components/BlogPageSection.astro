@@ -1,0 +1,28 @@
+---
+import { db, and, eq, Pic, BlogEntry, BlogEntryPics} from "astro:db";
+import ImageScrollGallery from "./ImageScrollGallery.astro";
+
+const { section } = Astro.props;
+
+const entries = await db.select().from(BlogEntry)
+    .where(eq(BlogEntry.section, section.id));
+
+---
+    {section.title && <h2>{section.title}</h2>}
+    {
+        entries.map((entry) => <div>
+            {entry.title && <h3>{entry.title}</h3>}
+            {
+                (async () => {
+                    const pics = await db.select().from(Pic)
+                        .innerJoin(BlogEntryPics, eq(BlogEntryPics.pic, Pic.id))
+                        .where(and(eq(BlogEntryPics.blogEntry, entry.id), BlogEntryPics.featured));
+
+                    const picPaths = pics.map(({ Pic }) => ({ path: Pic.basePath + Pic.name, title: Pic.alt}));
+
+                    return <ImageScrollGallery images={picPaths} />
+                })()
+            }
+            <p><em>Datum: {entry.date.toLocaleDateString()}</em></p>
+        </div>)
+    }

@@ -1,0 +1,30 @@
+---
+import Grid from "../../layouts/Grid.astro";
+import { db, eq, BlogPage, BlogSection } from "astro:db";
+import SectionComponent from "../../components/BlogPageSection.astro";
+
+export async function getStaticPaths() {
+    const pages = await db.select().from(BlogPage);
+    
+    return pages.map( (blogPage) => {
+        return { 
+            params: { page: blogPage.title },
+            props: blogPage
+        }
+    });
+}
+
+const { title: pageTitle, emoji } = Astro.props;
+
+let sections = await db.select().from(BlogSection)
+    .where(eq(BlogSection.page, pageTitle));
+---
+
+<Grid title="Blog" icon={emoji}>
+    <a href="/blog" class="redlink">&lt;- zurück</a>
+    <h1>{pageTitle}</h1>
+
+    {
+        sections.map((section) => <SectionComponent section={section} />)
+    }
+</Grid>
