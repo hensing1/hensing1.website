@@ -12,6 +12,6 @@ const fakten = await db.select().from(FaktDesTages);
 <BaseLayout icon={icon} title={title} addFloater={true}>
 	<p>Die Fakten sind:</p>
 	<ul>
-		{ fakten.map(({ fakt }) => <li>{fakt}</li>) }
+		{fakten.map(({ fakt }) => <li>{fakt}</li>)}
 	</ul>
 </BaseLayout>

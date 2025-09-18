@@ -8,26 +8,47 @@ export const icon = "👋";
 export const title = "Blog";
 export const index = 1;
 
-const featuredImages = await db.select()
+const featuredImages = await db
+    .select()
     .from(BlogPageFeature)
     .innerJoin(Pic, eq(Pic.id, BlogPageFeature.picID));
 
-const images = featuredImages.map(({Pic}) => ({path: Pic.basePath + Pic.name, title: Pic.alt}));
+const images = featuredImages.map(({ Pic }) => ({
+    path: Pic.basePath + Pic.name,
+    title: Pic.alt,
+}));
 ---
 
 <style>
-
     h1 {
         border-bottom: 2px solid black;
     }
-    
+
+    .single-file {
+        display: none;
+    }
+
+    @media screen and (max-width: 636px) {
+        .single-file {
+            display: unset;
+        }
+
+        .double-file {
+            display: none;
+        }
+    }
 </style>
 
 <BaseLayout icon={icon} title={title}>
     <h1>Pinterest des Grauens</h1>
-    
+
     <h2>Aktuell</h2>
-    <p class="text-with-button">Hi ich bin in Kanada!!!<a href="blog/Kanada" class="redlink">zur Blogseite -&gt;</a></p>
-    
-    <Masonry images={images} numColumns={3} />
+    <p class="text-with-button">
+        Hi ich bin in Kanada!!!
+        <a href="/blog/Kanada" class="redlink">zur Blogseite -&gt;</a>
+    </p>
+
+    <!-- sorry -->
+    <div class="single-file"><Masonry images={images} numColumns={1} /></div>
+    <div class="double-file"><Masonry images={images} numColumns={2} /></div>
 </BaseLayout>
