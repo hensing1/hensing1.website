@@ -9,8 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/db": "^0.17.1",
-    "astro": "^5.13.4"
+    "@astrojs/db": "^0.18.0",
+    "astro": "^5.13.8"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
