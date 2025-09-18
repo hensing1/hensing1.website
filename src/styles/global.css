@@ -1,51 +1,50 @@
 * {
-    /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
-    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    font-family: 'Courier New', Courier, monospace;
-    /* font-size: 12pt; */
+  /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
+  /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  font-family: "Courier New", Courier, monospace;
+  /* font-size: 12pt; */
 }
 
 @font-face {
-    font-family: 'DotMatrix';
-    src: url('/fonts/DotMatrix.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  font-family: "DotMatrix";
+  src: url("/fonts/DotMatrix.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'DotMatrixBold';
-    src: url('/fonts/DotMatrixBold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+  font-family: "DotMatrixBold";
+  src: url("/fonts/DotMatrixBold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
-
 
 a.redlink {
-    display: inline-block;
-    background-color: lightseagreen;
-    line-height: 1.5em;
-    border-radius: 0.75em;
-    padding-left: 0.75em;
-    padding-right: 0.75em;
-    color: black;
-    box-shadow: 0.2em 0.2em;
-    text-decoration: none;
-    text-align: center;
-    font-size: medium;
-    user-select: none;
-    transition: 0.3s;
+  display: inline-block;
+  background-color: oklch(80% 0.3 90deg);
+  line-height: 1.5em;
+  border-radius: 0.75em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  color: black;
+  box-shadow: 0.4em 0.4em;
+  text-decoration: none;
+  text-align: center;
+  font-size: medium;
+  user-select: none;
+  transition: 0.3s;
 }
 
 a.redlink:hover {
-    transform: translate(-0.2em, -0.2em);
-    box-shadow: 0.4em 0.4em;
+  transform: translate(-0.17em, -0.17em);
+  box-shadow: 0.57em 0.57em;
 }
 
 p.text-with-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
