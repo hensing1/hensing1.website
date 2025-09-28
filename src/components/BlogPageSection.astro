@@ -1,35 +1,61 @@
 ---
-import { db, and, eq, Pic, BlogEntry, BlogEntryPics} from "astro:db";
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/libsql";
+import { like } from "drizzle-orm";
+import { albums } from "../../db/digikam.ts";
+
 import ImageScrollGallery from "./ImageScrollGallery.astro";
 
-const { section } = Astro.props;
+import { selectPics } from "../scripts/select_pics.ts";
 
-const entries = await db.select().from(BlogEntry)
-    .where(eq(BlogEntry.section, section.id));
+const { page, section } = Astro.props;
 
----
-<style>
-h2 {
-    margin-top: 3em;
-    font-family: 'DotMatrix';
+const db = drizzle(process.env.DB_FILE_NAME!);
+
+const entries = await db
+    .select()
+    .from(albums)
+    .where(like(albums.relativePath, `/${page}/${section}%`));
+
+let displaySection = false;
+let entryPics: { [key: string]: any } = {};
+for (const entry of entries) {
+    entryPics[entry.relativePath] = await selectPics([entry.id], 3);
+    if (entryPics[entry.relativePath].length > 0) {
+        displaySection = true;
+    }
 }
+---
+
+<style>
+    h2 {
+        margin-top: 3em;
+        font-family: "DotMatrix";
+    }
 </style>
 
-{section.title && <h2>{section.title}</h2>}
 {
-    entries.map((entry) => <div>
-        {entry.title && <h3>{entry.title}</h3>}
-        <p><em>Datum: {entry.date.toLocaleDateString()}</em></p>
-        {
-            (async () => {
-                const pics = await db.select().from(Pic)
-                    .innerJoin(BlogEntryPics, eq(BlogEntryPics.pic, Pic.id))
-                    .where(and(eq(BlogEntryPics.blogEntry, entry.id), BlogEntryPics.featured));
-
-                const picPaths = pics.map(({ Pic }) => ({ path: Pic.basePath + Pic.name, title: Pic.alt}));
-
-                return <ImageScrollGallery images={picPaths} />
-            })()
-        }
-    </div>)
+    displaySection && (
+        <>
+            <h2>{section}</h2>
+            {entries
+                .filter((entry) => entryPics[entry.relativePath].length > 0)
+                .map((entry) => (
+                    <>
+                        {entry.caption && <h3>{entry.caption}</h3>}
+                        {entry.date && (
+                            <p>
+                                <em>
+                                    Datum:{" "}
+                                    {new Date(entry.date).toLocaleDateString()}
+                                </em>
+                            </p>
+                        )}
+                        <ImageScrollGallery
+                            images={entryPics[entry.relativePath]}
+                        />
+                    </>
+                ))}
+        </>
+    )
 }
