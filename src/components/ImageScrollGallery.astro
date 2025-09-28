@@ -5,71 +5,72 @@ const imagePadding = "10px";
 ---
 
 <style define:vars={{ imagePadding }}>
-.scroll-container {
-    display: flex;
-    background-color: #333;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    padding-top: var(--imagePadding);
-    padding-left: var(--imagePadding);
-    height: 400px;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    /* box-sizing: border-boxinline-; */
-    border-radius: 20px;
-    
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-    scroll-padding-left: 10px;
-    
-    scrollbar-width: none;
-    
-}
+    .scroll-container {
+        display: flex;
+        background-color: #333;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding-top: var(--imagePadding);
+        padding-left: var(--imagePadding);
+        height: 400px;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        /* box-sizing: border-boxinline-; */
+        border-radius: 20px;
 
-/* Hide scrollbar on Chrome & Safari */
-.scroll-container::-webkit-scrollbar {
-    display: none;
-}
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+        scroll-padding-left: 10px;
 
-.scroll-container .img-container {
-    display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    margin-right: var(--imagePadding);
-    margin-top: 0;
-    height: 100%;
-    width: auto;
-    scroll-snap-align: center;
-    align-items: center;
-}
-        
-.img-container img {
-    display: flex;
-    height: calc(100% - 2.2rem);
-    width: auto;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    align-self: flex-start;
-}
-            
-.img-container p {
-    display: flex;
-    flex: 1;
-    margin: 0;
-    margin-top: 0.5rem;
-    align-items: flex-start;
-    color: white;
-}
+        scrollbar-width: none;
+    }
+
+    /* Hide scrollbar on Chrome & Safari */
+    .scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scroll-container .img-container {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        margin-right: var(--imagePadding);
+        margin-top: 0;
+        height: 100%;
+        width: auto;
+        scroll-snap-align: center;
+        align-items: center;
+    }
+
+    .img-container img {
+        display: flex;
+        height: calc(100% - 2.2rem);
+        width: auto;
+        border-radius: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        align-self: flex-start;
+    }
+
+    .img-container p {
+        display: flex;
+        flex: 1;
+        margin: 0;
+        margin-top: 0.5rem;
+        align-items: flex-start;
+        color: white;
+    }
 </style>
-    
+
 <div class="scroll-container">
-    {images.map((image: any) =>
-        <div class="img-container">
-            <img src={image.path} title={image.title} />
-            {image.title && <p>{image.title}</p>}
-        </div>
-    )}
+    {
+        images.map((image: any) => (
+            <div class="img-container">
+                <img src={image.path} title={image.title} />
+                {image.caption && <p>{image.caption}</p>}
+            </div>
+        ))
+    }
 </div>
