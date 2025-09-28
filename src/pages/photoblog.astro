@@ -2,19 +2,16 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Masonry from "../components/ImageMasonry.astro";
 
+import { getAlbumIDs, selectPics } from "../scripts/select_pics.ts";
+
 export const icon = "📸";
 export const title = "Photoblog";
 export const index = 1;
 
-const featuredImages = await db
-    .select()
-    .from(BlogPageFeature)
-    .innerJoin(Pic, eq(Pic.id, BlogPageFeature.picID));
+const albumIDs = await getAlbumIDs("/Kanada%");
+console.log(albumIDs);
 
-const images = featuredImages.map(({ Pic }) => ({
-    path: Pic.basePath + Pic.name,
-    title: Pic.alt,
-}));
+const featuredImages = await selectPics(albumIDs, 4);
 ---
 
 <style>
@@ -47,6 +44,10 @@ const images = featuredImages.map(({ Pic }) => ({
     </p>
 
     <!-- sorry -->
-    <div class="single-file"><Masonry images={images} numColumns={1} /></div>
-    <div class="double-file"><Masonry images={images} numColumns={2} /></div>
+    <div class="single-file">
+        <Masonry images={featuredImages} numColumns={1} />
+    </div>
+    <div class="double-file">
+        <Masonry images={featuredImages} numColumns={2} />
+    </div>
 </BaseLayout>
