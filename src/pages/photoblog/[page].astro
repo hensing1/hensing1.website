@@ -1,0 +1,81 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionComponent from "../../components/BlogPageSection.astro";
+
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/libsql";
+import { eq, like } from "drizzle-orm";
+import { albums } from "../../../db/digikam.ts";
+
+// Make a page for every album in digikam with category "Blog"
+export async function getStaticPaths() {
+  const db = drizzle(process.env.DB_FILE_NAME!);
+  let blogAlbums = await db
+    .select({ albumPath: albums.relativePath })
+    .from(albums)
+    .where(eq(albums.collection, "Blog"));
+
+  // album path should look like "/name", but not "/name/sub-name"
+  blogAlbums = blogAlbums.filter((album) =>
+    album.albumPath.match("^\/[^\/]+$"),
+  );
+
+  return blogAlbums.map((album) => {
+    return {
+      params: { page: album.albumPath.slice(1) },
+      props: { title: album.albumPath.slice(1) },
+    };
+  });
+}
+
+const { title } = Astro.props;
+
+const icon =
+  {
+    Kanada: "🇨🇦",
+  }[title] ?? "🎉";
+
+const db = drizzle(process.env.DB_FILE_NAME!);
+
+const allAlbums = await db
+  .select({ albumPath: albums.relativePath })
+  .from(albums)
+  .where(like(albums.relativePath, `/${title}%`))
+  .orderBy(albums.date);
+
+const sections = allAlbums
+  .filter((album) => album.albumPath.split("/").length == 3)
+  .map((album) => album.albumPath.split("/").at(-1));
+
+const subsections: { [key: string]: any } = {};
+sections.forEach((section) => {
+  subsections[section!] = allAlbums
+    .filter(
+      (album) =>
+        album.albumPath.split("/").length == 4 &&
+        album.albumPath.startsWith(`/${title}/${section}`),
+    )
+    .map((album) => album.albumPath.split("/").at(-1));
+});
+
+console.log(sections);
+---
+
+<style>
+  h1 {
+    border-bottom: 2px solid black;
+    /* font-family: 'DotMatrix'; */
+  }
+  #back {
+    float: right;
+  }
+</style>
+<BaseLayout icon={icon} title={title}>
+  <h1>{title}</h1>
+  <a href="/photoblog" id="back" class="redlink">&lt;- zurück</a>
+  {
+    sections.map((section) => (
+      <SectionComponent page={title} section={section} />
+    ))
+  }
+</BaseLayout>
