@@ -10,13 +10,81 @@ import {
 
 const db = drizzle(process.env.DB_FILE_NAME!);
 
+export async function getBlogPageNames() {
+  let blogAlbums = await db
+    .select({ albumPath: albums.relativePath })
+    .from(albums)
+    .where(eq(albums.collection, "Blog"));
+
+  return blogAlbums
+    .filter((album) =>
+      // album path should look like "/name", but not "/name/sub-name"
+      album.albumPath.match("^\/[^\/]+$"),
+    )
+    .map((album) => album.albumPath.slice(1));
+}
+
+export async function getBlogSectionsForPage(page: string) {
+  const allAlbums = await db
+    .select({
+      id: albums.id,
+      albumRoot: albums.albumRoot,
+      relativePath: albums.relativePath,
+      name: albums.relativePath,
+      date: albums.date,
+      caption: albums.caption,
+      collection: albums.collection,
+    })
+    .from(albums)
+    .where(like(albums.relativePath, `/${page}/%`))
+    .orderBy(albums.date);
+
+  return allAlbums
+    .filter((album) => album.relativePath.split("/").length == 3)
+    .map((album) => {
+      album.name = album.relativePath.split("/").at(-1)!;
+      return album;
+    });
+}
+
+export async function getBlogEntriesForSection(page: string, section: string) {
+  const sectionAlbums = await db
+    .select({
+      id: albums.id,
+      albumRoot: albums.albumRoot,
+      relativePath: albums.relativePath,
+      name: albums.relativePath,
+      date: albums.date,
+      caption: albums.caption,
+      collection: albums.collection,
+    })
+    .from(albums)
+    .where(like(albums.relativePath, `/${page}/${section}%`))
+    .orderBy(albums.date);
+
+  return sectionAlbums.map((album) => {
+    album.name = album.relativePath.split("/").at(-1)!;
+    return album;
+  });
+}
+
+export async function getBlogEntriesForPage(page: string) {
+  const sections = await getBlogSectionsForPage(page);
+  let entries = [];
+  for (const section of sections) {
+    entries.push(...(await getBlogEntriesForSection(page, section.name)));
+  }
+  return entries;
+}
+
 export async function getAlbumIDs(albumSelector: string) {
   const ids = await db
     .select({
       albumID: albums.id,
     })
     .from(albums)
-    .where(like(albums.relativePath, albumSelector));
+    .where(like(albums.relativePath, albumSelector))
+    .orderBy(albums.date);
 
   return ids.map((id) => id.albumID);
 }

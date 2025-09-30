@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+import {
+  getBlogPageNames,
+  getBlogEntriesForPage,
+} from "../../../scripts/select_pics.ts";
+
+export async function getStaticPaths() {
+  const pages = await getBlogPageNames();
+  let paths = [];
+  for (const page of pages) {
+    const entries = await getBlogEntriesForPage(page);
+    paths.push(
+      ...entries.map((entry) => {
+        return { params: { page: page, entry: entry.name } };
+      }),
+    );
+  }
+  return paths;
+}
+---
+
+<BaseLayout />

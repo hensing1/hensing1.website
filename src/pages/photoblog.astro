@@ -9,7 +9,6 @@ export const title = "Photoblog";
 export const index = 1;
 
 const albumIDs = await getAlbumIDs("/Kanada%");
-console.log(albumIDs);
 
 const featuredImages = await selectPics(albumIDs, 4);
 ---

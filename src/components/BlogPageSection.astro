@@ -1,21 +1,14 @@
 ---
-import "dotenv/config";
-import { drizzle } from "drizzle-orm/libsql";
-import { like } from "drizzle-orm";
-import { albums } from "../../db/digikam.ts";
-
 import ImageScrollGallery from "./ImageScrollGallery.astro";
 
-import { selectPics } from "../scripts/select_pics.ts";
+import {
+    selectPics,
+    getBlogEntriesForSection,
+} from "../scripts/select_pics.ts";
 
 const { page, section } = Astro.props;
 
-const db = drizzle(process.env.DB_FILE_NAME!);
-
-const entries = await db
-    .select()
-    .from(albums)
-    .where(like(albums.relativePath, `/${page}/${section}%`));
+const entries = await getBlogEntriesForSection(page, section);
 
 let displaySection = false;
 let entryPics: { [key: string]: any } = {};
