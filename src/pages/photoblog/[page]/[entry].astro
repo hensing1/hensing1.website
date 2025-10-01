@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getBlogPageIcon } from "../../../scripts/get_icon.ts";
 
 import {
   getBlogPageNames,
   getBlogEntriesForPage,
+  selectPics,
 } from "../../../scripts/select_pics.ts";
 
 export async function getStaticPaths() {
@@ -13,12 +15,81 @@ export async function getStaticPaths() {
     const entries = await getBlogEntriesForPage(page);
     paths.push(
       ...entries.map((entry) => {
-        return { params: { page: page, entry: entry.name } };
+        return {
+          params: { page: page.toLowerCase(), entry: entry.name.toLowerCase() },
+          props: { page: page, entry: entry },
+        };
       }),
     );
   }
   return paths;
 }
----
 
-<BaseLayout />
+const { page, entry } = Astro.props;
+
+const pics = await selectPics([entry.id], 2);
+---
+<style>
+h2 {
+    font-family: 'DotMatrix';
+}
+.scroll-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 600px;
+  scroll-snap-type: y mandatory;
+}
+.img-container {
+  width: 100%;
+  height: 600px;
+  position: relative;
+}
+.img-container img {
+  display: flex;
+  max-height: 100%;
+  max-width: 100%;
+  /* width: auto; */
+  margin-left: auto; 
+  margin-right: auto;
+  border-radius: 1.5em;
+  scroll-snap-align: start;
+}
+.text-caption {
+  background: rgba(0.4, 0.4, 0.4, 0.7);
+  padding: 1em;
+  color: white;
+  position: absolute;
+  bottom: 2em;
+  width: fit-content;
+  max-width: 80%;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  border-radius: 0.5em;
+}
+.text-caption p {
+  margin: 0;
+}
+</style>
+
+<BaseLayout title={entry.name} icon={getBlogPageIcon(page)} >
+  <h2>{entry.section}</h2>
+  <p style="display: flex; align-items: center; justify-content: space-between;">
+    <em>Datum: {new Date(entry.date!).toLocaleDateString()}</em>
+    <a
+      class="redlink"
+      href={`/photoblog/${(page as string).toLowerCase()}`}
+    >
+      &lt;- zurück
+    </a>
+  </p>
+  <div class="scroll-container">
+    { pics.map((pic) => 
+      <div class="img-container">
+        <img src={pic.path} title={pic.title}) />
+        {pic.caption && <div class="text-caption"><p>{pic.caption}</p></div>}
+      </div>)
+    }
+  </div>
+</BaseLayout>

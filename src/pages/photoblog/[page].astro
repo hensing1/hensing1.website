@@ -6,6 +6,7 @@ import {
   getBlogPageNames,
   getBlogSectionsForPage,
 } from "../../scripts/select_pics.ts";
+import { getBlogPageIcon } from "../../scripts/get_icon";
 
 // Make a page for every album in digikam with category "Blog"
 export async function getStaticPaths() {
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 
   return blogAlbums.map((album) => {
     return {
-      params: { page: album },
+      params: { page: album.toLowerCase() },
       props: { title: album },
     };
   });
@@ -21,10 +22,7 @@ export async function getStaticPaths() {
 
 const { title: pageTitle } = Astro.props;
 
-const icon =
-  {
-    Kanada: "🇨🇦",
-  }[pageTitle] ?? "🎉";
+const icon = getBlogPageIcon(pageTitle);
 
 const sections = await getBlogSectionsForPage(pageTitle);
 ---
@@ -38,6 +36,7 @@ const sections = await getBlogSectionsForPage(pageTitle);
     float: right;
   }
 </style>
+
 <BaseLayout icon={icon} title={pageTitle}>
   <h1>{pageTitle}</h1>
   <a href="/photoblog" id="back" class="redlink">&lt;- zurück</a>

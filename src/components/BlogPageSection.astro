@@ -2,8 +2,8 @@
 import ImageScrollGallery from "./ImageScrollGallery.astro";
 
 import {
-    selectPics,
-    getBlogEntriesForSection,
+  selectPics,
+  getBlogEntriesForSection,
 } from "../scripts/select_pics.ts";
 
 const { page, section } = Astro.props;
@@ -13,42 +13,43 @@ const entries = await getBlogEntriesForSection(page, section);
 let displaySection = false;
 let entryPics: { [key: string]: any } = {};
 for (const entry of entries) {
-    entryPics[entry.relativePath] = await selectPics([entry.id], 3);
-    if (entryPics[entry.relativePath].length > 0) {
-        displaySection = true;
-    }
+  entryPics[entry.relativePath] = await selectPics([entry.id], 3);
+  if (entryPics[entry.relativePath].length > 0) {
+    displaySection = true;
+  }
 }
 ---
 
 <style>
-    h2 {
-        margin-top: 3em;
-        font-family: "DotMatrix";
-    }
+  h2 {
+    margin-top: 3em;
+    font-family: "DotMatrix";
+  }
 </style>
 
 {
-    displaySection && (
-        <>
-            <h2>{section}</h2>
-            {entries
-                .filter((entry) => entryPics[entry.relativePath].length > 0)
-                .map((entry) => (
-                    <>
-                        {entry.caption && <h3>{entry.caption}</h3>}
-                        {entry.date && (
-                            <p>
-                                <em>
-                                    Datum:{" "}
-                                    {new Date(entry.date).toLocaleDateString()}
-                                </em>
-                            </p>
-                        )}
-                        <ImageScrollGallery
-                            images={entryPics[entry.relativePath]}
-                        />
-                    </>
-                ))}
-        </>
-    )
+  displaySection && (
+    <>
+      <h2>{section}</h2>
+      {entries
+        .filter((entry) => entryPics[entry.relativePath].length > 0)
+        .map((entry) => (
+          <>
+            {entry.caption && <h3>{entry.caption}</h3>}
+            {entry.date && (
+              <p style="display: flex; align-items: center; justify-content: space-between;">
+                <em>Datum: {new Date(entry.date).toLocaleDateString()}</em>
+                <a
+                  class="redlink"
+                  href={`/photoblog/${(page as string).toLowerCase()}/${entry.name.toLowerCase()}`}
+                >
+                  zum Tageseintrag -&gt;
+                </a>
+              </p>
+            )}
+            <ImageScrollGallery images={entryPics[entry.relativePath]} />
+          </>
+        ))}
+    </>
+  )
 }

@@ -53,6 +53,7 @@ export async function getBlogEntriesForSection(page: string, section: string) {
       id: albums.id,
       albumRoot: albums.albumRoot,
       relativePath: albums.relativePath,
+      section: albums.relativePath,
       name: albums.relativePath,
       date: albums.date,
       caption: albums.caption,
@@ -63,6 +64,7 @@ export async function getBlogEntriesForSection(page: string, section: string) {
     .orderBy(albums.date);
 
   return sectionAlbums.map((album) => {
+    album.section = section;
     album.name = album.relativePath.split("/").at(-1)!;
     return album;
   });
