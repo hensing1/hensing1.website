@@ -14,10 +14,12 @@ export async function getStaticPaths() {
   for (const page of pages) {
     const entries = await getBlogEntriesForPage(page);
     paths.push(
-      ...entries.map((entry) => {
+      ...entries.map((entry, index) => {
+        const prev = index > 0 ? entries[index - 1] : null;
+        const next = index < entries.length - 1 ? entries[index + 1] : null;
         return {
           params: { page: page.toLowerCase(), entry: entry.name.toLowerCase() },
-          props: { page: page, entry: entry },
+          props: { page: page, entry: entry, prev: prev, next: next },
         };
       }),
     );
@@ -25,7 +27,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { page, entry } = Astro.props;
+const { page, entry, prev, next } = Astro.props;
 
 const pics = await selectPics([entry.id], 2);
 ---
@@ -75,14 +77,35 @@ h2 {
 
 <BaseLayout title={entry.name} icon={getBlogPageIcon(page)} >
   <h2>{entry.section}</h2>
+  <h3>{new Date(entry.date!).toLocaleDateString()}
+    {entry.caption && <>{" - "} {entry.caption}</>}
+  </h3>
   <p style="display: flex; align-items: center; justify-content: space-between;">
-    <em>Datum: {new Date(entry.date!).toLocaleDateString()}</em>
     <a
       class="redlink"
       href={`/photoblog/${(page as string).toLowerCase()}`}
     >
-      &lt;- zurück
+      &lt;-- zurück
     </a>
+    <span>
+      { prev && 
+        <a
+          class="redlink"
+          style="margin-right: 1em;"
+          href=`/photoblog/${(page as string).toLowerCase()}/${prev.name.toLowerCase()}`
+        >
+          &lt;- vorheriger Eintrag
+        </a>
+      }
+      { next && 
+        <a
+          class="redlink"
+          href=`/photoblog/${(page as string).toLowerCase()}/${next.name.toLowerCase()}`
+        >
+          nächster Eintrag -&gt;
+        </a>
+      }
+    </span>
   </p>
   <div class="scroll-container">
     { pics.map((pic) => 

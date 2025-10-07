@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql";
-import { eq, and, like, gte, inArray } from "drizzle-orm";
+import { eq, and, like, gte, inArray, exists } from "drizzle-orm";
 import {
   albums,
   images,
@@ -60,7 +60,13 @@ export async function getBlogEntriesForSection(page: string, section: string) {
       collection: albums.collection,
     })
     .from(albums)
-    .where(like(albums.relativePath, `/${page}/${section}%`))
+    .where(
+      and(
+        like(albums.relativePath, `/${page}/${section}%`),
+        exists(db.select().from(images).where(eq(images.album, albums.id))),
+        // only select albums that actually have images in them
+      ),
+    )
     .orderBy(albums.date);
 
   return sectionAlbums.map((album) => {
