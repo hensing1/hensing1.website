@@ -1,5 +1,14 @@
 ---
 const { images, numColumns } = Astro.props;
+
+let colHeights = Array(numColumns).fill(0);
+let columns = Array.from(Array(numColumns), () => new Array());  // 2d array
+for (let image of images) {
+    let smallestHeight = Math.min(...colHeights);
+    let smallestCol = colHeights.indexOf(smallestHeight);
+    columns[smallestCol].push(image);
+    colHeights[smallestCol] += image.height / image.width;
+}
 ---
 <style>
 .imageGridContainer {
@@ -26,7 +35,7 @@ const { images, numColumns } = Astro.props;
         [...Array(numColumns).keys()].map((colNum) => 
             <div class="column" >
                 {
-                    images.filter((_: any, index: number) => index % numColumns == colNum).map((image: any) =>
+                    columns[colNum].map((image: any) =>
                         <img src={image.path} title={image.title} />
                     )
                 }

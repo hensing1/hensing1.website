@@ -128,6 +128,8 @@ export async function selectPics(albumIDs: number[], minRating: number) {
       path: images.name,
       title: titles.comment,
       caption: captions.comment,
+      width: imageInformation.width,
+      height: imageInformation.height
     })
     .from(images)
     .leftJoin(titles, eq(images.id, titles.imageID))
