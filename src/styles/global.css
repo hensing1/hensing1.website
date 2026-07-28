@@ -48,3 +48,11 @@ p.text-with-button {
   align-items: center;
   justify-content: space-between;
 }
+
+p > sup {
+  color: blue;
+}
+
+p > code {
+  background-color: lightgray;
+}

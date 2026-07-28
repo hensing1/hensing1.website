@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+export const icon = "❔";
+export const title = "About";
+export const index = 2;
+---
+
+<BaseLayout icon={icon} title={title}>
+  <h1>Über mich</h1>
+  <p>Hi, ich bin Henning und das ist meine Website!</p>
+  <p>Aktuell arbeite ich an meinem Master of Computer Science an der Uni Bonn.</p>
+  <p>Zu meinen Interessen zählen: Musik machen (hauptsächlich Gitarre), Dinge programmieren (Websites zum Beispiel), <a href="/photoblog">Fotos machen</a>, Computerspiele (hauptsächlich Trackmania), Paartanz, Fußball spielen<sup>[deprecated]</sup>, <a href="https://github.com/hensing1/aoc" target="_blank">Coding puzzles</a> und prokrastinieren. Meine neueste Akquise ist ein Handbuch für das anatomisch korrekte Zeichnen von Haus- und Wildkatzen, denn anscheinend hatte ich noch nicht ausreichend Hobbies.</p>
+  <p>Ich bin außerdem (Teilzeit-)Redakteur bei der <a href="https://antiklopedia.de" target="_blank">Antiklopedia</a>, der einzigen Informationsquelle im Internet.</p>
+
+  <h2>Bevor irgendwer fragt</h2>
+  <h3>Was ist ein <code>hensing1</code>?</h3>
+  <p><code>hensing1</code> ist mein Tag auf Discord, Steam, Bluesky, und auf den meisten anderen Websites, auf denen ich unterwegs bin. Ich hab ihn mir irgendwann mal als möglichst bescheuerte Vewurschtelung von meinen Vornamen ausgedacht, bis ich eines Tages feststellen musste dass es Leute gibt die <a href="https://nachnamen.net/nachname-hensing" target="_blank">tatsächlich so heißen</a>. Außerdem verkauft jemand Milchautomaten unter diesem Namen. Upsi!</p>
+
+  <h3>Woraus besteht diese Website?</h3>
+  <p>Diese Website ist mit <a href="https://astro.build/">Astro</a> gebastelt. Astro ist (unter anderem) ein static site generator, man kommt also ohne PHP aus und es landet (fast) kein JavaScript im Browser.</p>
+  <!-- <p>Es macht auch die Entwicklung sehr angenehm, da einem viel vom üblichen Ärger der Webentwicklung erspart bleibt (keine rewrite rules in Nginx/Apache, wiederverwendbare Layouts und Komponenten, dynamisch erstellte Seiten und Sections) und man gleichzeitig alles mit vanilla HTML/CSS/JS erledigen kann, ohne auf 3000 Heavyweight-Frameworks zurückzugreifen.</p> -->
+  <p>Der <a href="/photoblog">Fotoblog</a> funktioniert beispielsweise wie folgt: ich mache all meine Beschriftungen, Bewertungen und Bearbeitungen in <a href="https://www.digikam.org/" target="_blank">Digikam</a>. Dann schaut Astro in die Sqlite-Datenbank von Digikam rein, findet alle Fotos mit Bewertug von mindestens 2 Sternen, und erstellt die Blogseiten anhand der Alben in denen die Fotos sind. Für einen neuen Eintrag im Blog muss man die Seite bloß neu erstellen!</p>
+
+  <h3>Ist irgendetwas von dieser Seite KI-generiert?</h3>
+  <p>Nein.</p>
+
+  <h3>Was soll das alles?</h3>
+  <p>Meine Website ist halb kreatives Outlet für dieses und jenes Gedöns, das ich mit Freunden und Familie teilen möchte, und halb Protest gegen die unerträgliche Sensations- und Aufmerksamkeitsgeilheit von Social Media. Hier gibt es keine Cookies, Like-Buttons, Watch Time, Content-Feeds, Google Analytics, Werbung, KI-Chatbots oder Werbung für KI-Chatbots. Hier muss man noch selbst klicken.</p>
+</BaseLayout>
