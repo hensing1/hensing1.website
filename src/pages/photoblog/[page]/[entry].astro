@@ -6,7 +6,7 @@ import {
   getBlogPageNames,
   getBlogEntriesForPage,
   selectPics,
-} from "../../../scripts/select_pics.ts";
+} from "../../../scripts/digikam_connector.ts";
 
 export async function getStaticPaths() {
   const pages = await getBlogPageNames();

@@ -7,6 +7,7 @@ export const title = "Home";
 export const index = 0;
 
 const fakten = await db.select().from(FaktDesTages);
+console.log(fakten);
 ---
 
 <BaseLayout icon={icon} title={title} addFloater={true}>

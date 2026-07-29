@@ -2,15 +2,26 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Masonry from "../components/ImageMasonry.astro";
 
-import { getAlbumIDs, selectPics } from "../scripts/select_pics.ts";
+import { getBlogPageNames, getAlbumIDsByPath, getAlbumsByTag, selectPics } from "../scripts/digikam_connector.ts";
+import { alias } from "astro:db";
 
 export const icon = "📸";
 export const title = "Photoblog";
 export const index = 1;
 
-const albumIDs = await getAlbumIDs("/Kanada%");
+const albums = await getAlbumsByTag("Blog");
 
-const featuredImages = await selectPics(albumIDs, 4);
+const pathParts = albums.map((album) => album.relativePath.split("/", 3).splice(1));
+const paths = new Map();
+pathParts.forEach((part: Array<string>) => {
+    const [year, name] = part;
+    if (!paths.has(year)) {
+        paths.set(year, []);
+    }
+    paths.get(year).push(name);
+});
+
+// const featuredImages = await selectPics(albumIDs, 4);
 ---
 
 <style>
@@ -36,17 +47,26 @@ const featuredImages = await selectPics(albumIDs, 4);
 <BaseLayout icon={icon} title={title}>
     <h1>Pinterest des Grauens</h1>
 
-    <h2>Aktuell</h2>
+    {
+        Array.from(paths.keys()).sort().reverse().map((year) => <>
+            <h2>{year}</h2>
+            {
+                paths.get(year).sort().reverse().map((entry: string) => <h3>{entry}</h3>)
+            }
+        </>)
+    }
+
+    <!-- <h2>Aktuell</h2>
     <p class="text-with-button">
         Hi ich bin in Kanada!!!
         <a href="/photoblog/kanada" class="redlink">zur Blogseite -&gt;</a>
-    </p>
+    </p> -->
 
     <!-- sorry -->
-    <div class="single-file">
+    <!-- <div class="single-file">
         <Masonry images={featuredImages} numColumns={1} />
     </div>
     <div class="double-file">
         <Masonry images={featuredImages} numColumns={2} />
-    </div>
+    </div> -->
 </BaseLayout>

@@ -17,10 +17,6 @@ export async function getBlogPageNames() {
     .where(eq(albums.collection, "Blog"));
 
   return blogAlbums
-    .filter((album) =>
-      // album path should look like "/name", but not "/name/sub-name"
-      album.albumPath.match("^\/[^\/]+$"),
-    )
     .map((album) => album.albumPath.slice(1));
 }
 
@@ -85,7 +81,18 @@ export async function getBlogEntriesForPage(page: string) {
   return entries;
 }
 
-export async function getAlbumIDs(albumSelector: string) {
+export async function getAlbumsByTag(tag: string) {
+  const ids = await db
+    .select()
+    .from(albums)
+    .where(like(albums.collection, tag))
+    .orderBy(albums.date);
+
+  return ids;
+  // return ids.map((id) => id.albumID);
+}
+
+export async function getAlbumIDsByPath(albumSelector: string) {
   const ids = await db
     .select({
       albumID: albums.id,
