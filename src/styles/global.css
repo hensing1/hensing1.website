@@ -36,6 +36,7 @@ a.redlink {
   font-size: medium;
   user-select: none;
   transition: 0.3s;
+  margin-bottom: 19px;
 }
 
 a.redlink:hover {
@@ -43,7 +44,7 @@ a.redlink:hover {
   box-shadow: 0.57em 0.57em;
 }
 
-p.text-with-button {
+.text-with-button {
   display: flex;
   align-items: center;
   justify-content: space-between;

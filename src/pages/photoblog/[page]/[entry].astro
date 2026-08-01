@@ -1,15 +1,18 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getBlogPageIcon } from "../../../scripts/get_icon.ts";
+import { getBlogPageIcon } from "../../../scripts/util.ts";
 
 import {
-  getBlogPageNames,
   getBlogEntriesForPage,
   selectPics,
+  getAlbumsByTag,
 } from "../../../scripts/digikam_connector.ts";
 
+import { toURL } from "../../../scripts/util.ts";
+
 export async function getStaticPaths() {
-  const pages = await getBlogPageNames();
+  const blogRootAlbums = await getAlbumsByTag("Blog");
+  const pages = blogRootAlbums.map(album => album.relativePath);
   let paths = [];
   for (const page of pages) {
     const entries = await getBlogEntriesForPage(page);
@@ -18,8 +21,8 @@ export async function getStaticPaths() {
         const prev = index > 0 ? entries[index - 1] : null;
         const next = index < entries.length - 1 ? entries[index + 1] : null;
         return {
-          params: { page: page.toLowerCase(), entry: entry.name.toLowerCase() },
-          props: { page: page, entry: entry, prev: prev, next: next },
+          params: { page: toURL(page), entry: entry.name.toLowerCase() },
+          props: { pageURL: toURL(page), entry: entry, prev: prev, next: next },
         };
       }),
     );
@@ -27,7 +30,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { page, entry, prev, next } = Astro.props;
+const { pageURL, entry, prev, next } = Astro.props;
 
 const pics = await selectPics([entry.id], 2);
 ---
@@ -75,7 +78,7 @@ h2 {
 }
 </style>
 
-<BaseLayout title={entry.name} icon={getBlogPageIcon(page)} >
+<BaseLayout title={entry.name} icon={getBlogPageIcon(pageURL)} >
   <h2>{entry.section}</h2>
   <h3>{new Date(entry.date!).toLocaleDateString()}
     {entry.caption && <>{" - "} {entry.caption}</>}
@@ -83,7 +86,7 @@ h2 {
   <p style="display: flex; align-items: center; justify-content: space-between;">
     <a
       class="redlink"
-      href={`/photoblog/${(page as string).toLowerCase()}`}
+      href={`/photoblog/${pageURL}`}
     >
       &lt;-- zurück
     </a>
@@ -92,7 +95,7 @@ h2 {
         <a
           class="redlink"
           style="margin-right: 1em;"
-          href=`/photoblog/${(page as string).toLowerCase()}/${prev.name.toLowerCase()}`
+          href=`/photoblog/${pageURL}/${prev.name.toLowerCase()}`
         >
           &lt;- vorheriger Eintrag
         </a>
@@ -100,7 +103,7 @@ h2 {
       { next && 
         <a
           class="redlink"
-          href=`/photoblog/${(page as string).toLowerCase()}/${next.name.toLowerCase()}`
+          href=`/photoblog/${pageURL}/${next.name.toLowerCase()}`
         >
           nächster Eintrag -&gt;
         </a>

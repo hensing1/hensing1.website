@@ -2,26 +2,27 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Masonry from "../components/ImageMasonry.astro";
 
-import { getBlogPageNames, getAlbumIDsByPath, getAlbumsByTag, selectPics } from "../scripts/digikam_connector.ts";
-import { alias } from "astro:db";
+import { getAlbumsByPath, getAlbumsByTag, selectPics } from "../scripts/digikam_connector.ts";
+
+import { toURL } from "../scripts/util.ts";
 
 export const icon = "📸";
 export const title = "Photoblog";
 export const index = 1;
 
 const albums = await getAlbumsByTag("Blog");
+const years = new Map();
 
-const pathParts = albums.map((album) => album.relativePath.split("/", 3).splice(1));
-const paths = new Map();
-pathParts.forEach((part: Array<string>) => {
-    const [year, name] = part;
-    if (!paths.has(year)) {
-        paths.set(year, []);
-    }
-    paths.get(year).push(name);
-});
+for (const album of albums) {
+    const [year, albumName] = album.relativePath.substring(1).split(/\/(.*)/).slice(0, -1);
 
-// const featuredImages = await selectPics(albumIDs, 4);
+    const subAlbums = await getAlbumsByPath(`${album.relativePath}%`);
+    const numNestings = subAlbums.reduce((currMax, album) => Math.max(album.relativePath.split('/').length - 2, currMax), 0);
+    const pics = await selectPics(subAlbums.map(album => album.id), numNestings + 1); // triple-nested albums => only select pics with rating of 4 or higher
+
+    if (!years.has(year)) { years.set(year, []); }
+    years.get(year).push({name: albumName, albumObject: album, subNestings: numNestings, pics: pics});
+}
 ---
 
 <style>
@@ -48,10 +49,17 @@ pathParts.forEach((part: Array<string>) => {
     <h1>Pinterest des Grauens</h1>
 
     {
-        Array.from(paths.keys()).sort().reverse().map((year) => <>
+        Array.from(years.keys()).sort().reverse().map((year) => <>
             <h2>{year}</h2>
             {
-                paths.get(year).sort().reverse().map((entry: string) => <h3>{entry}</h3>)
+                years.get(year).sort().reverse().map((entry: any) => <>
+                    <div class="text-with-button">
+                        <h3 style="margin-top: 0">{entry.name}</h3>
+                        <a href={`/photoblog/${toURL(entry.albumObject.relativePath)}`} class="redlink">-&gt; mehr davon</a>
+                    </div>
+                    <Masonry images={entry.pics} numColumns={2} />
+                    <p>————————</p>
+                </>)
             }
         </>)
     }

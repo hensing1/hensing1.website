@@ -6,7 +6,7 @@ import {
   getBlogEntriesForSection,
 } from "../scripts/digikam_connector.ts";
 
-const { page, section } = Astro.props;
+const { page, pageURL, section } = Astro.props;
 
 const entries = await getBlogEntriesForSection(page, section);
 
@@ -41,7 +41,7 @@ for (const entry of entries) {
                 <em>Datum: {new Date(entry.date).toLocaleDateString()}</em>
                 <a
                   class="redlink"
-                  href={`/photoblog/${(page as string).toLowerCase()}/${entry.name.toLowerCase()}`}
+                  href={`/photoblog/${pageURL}/${entry.name.toLowerCase()}`}
                 >
                   zum Tageseintrag -&gt;
                 </a>

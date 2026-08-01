@@ -3,28 +3,32 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import SectionComponent from "../../components/BlogPageSection.astro";
 
 import {
-  getBlogPageNames,
+  getAlbumsByTag,
   getBlogSectionsForPage,
 } from "../../scripts/digikam_connector.ts";
-import { getBlogPageIcon } from "../../scripts/get_icon";
+import { getBlogPageIcon } from "../../scripts/util.ts";
+
+import {
+  toURL
+} from "../../scripts/util.ts";
 
 // Make a page for every album in digikam with category "Blog"
 export async function getStaticPaths() {
-  const blogAlbums = await getBlogPageNames();
+  const blogAlbums = await getAlbumsByTag("Blog");
 
   return blogAlbums.map((album) => {
     return {
-      params: { page: album.toLowerCase() },
-      props: { title: album },
+      params: { page: toURL(album.relativePath) },
+      props: { title: album.relativePath.slice(1).replaceAll("/", " | "), album: album },
     };
   });
 }
 
-const { title: pageTitle } = Astro.props;
+const { title: pageTitle, album: album } = Astro.props;
 
-const icon = getBlogPageIcon(pageTitle);
+const icon = getBlogPageIcon(toURL(album.relativePath));
 
-const sections = await getBlogSectionsForPage(pageTitle);
+const sections = await getBlogSectionsForPage(album.relativePath);
 ---
 
 <style>
@@ -41,8 +45,8 @@ const sections = await getBlogSectionsForPage(pageTitle);
   <h1>{pageTitle}</h1>
   <a href="/photoblog" id="back" class="redlink">&lt;- zurück</a>
   {
-    sections.map((section) => (
-      <SectionComponent page={pageTitle} section={section.name} />
-    ))
+    sections.map((section) => <>
+      <SectionComponent page={album.relativePath} pageURL={toURL(album.relativePath)} section={section.name} />
+    </>)
   }
 </BaseLayout>

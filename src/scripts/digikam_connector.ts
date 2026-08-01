@@ -32,11 +32,11 @@ export async function getBlogSectionsForPage(page: string) {
       collection: albums.collection,
     })
     .from(albums)
-    .where(like(albums.relativePath, `/${page}/%`))
+    .where(like(albums.relativePath, `${page}%`))
     .orderBy(albums.date);
 
   return allAlbums
-    .filter((album) => album.relativePath.split("/").length == 3)
+    .filter((album) => album.relativePath.split("/").length == 4)
     .map((album) => {
       album.name = album.relativePath.split("/").at(-1)!;
       return album;
@@ -58,7 +58,7 @@ export async function getBlogEntriesForSection(page: string, section: string) {
     .from(albums)
     .where(
       and(
-        like(albums.relativePath, `/${page}/${section}%`),
+        like(albums.relativePath, `${page}/${section}%`),
         exists(db.select().from(images).where(eq(images.album, albums.id))),
         // only select albums that actually have images in them
       ),
@@ -92,16 +92,14 @@ export async function getAlbumsByTag(tag: string) {
   // return ids.map((id) => id.albumID);
 }
 
-export async function getAlbumIDsByPath(albumSelector: string) {
+export async function getAlbumsByPath(albumSelector: string) {
   const ids = await db
-    .select({
-      albumID: albums.id,
-    })
+    .select()
     .from(albums)
     .where(like(albums.relativePath, albumSelector))
     .orderBy(albums.date);
 
-  return ids.map((id) => id.albumID);
+  return ids;
 }
 
 function getImageComments(name: string, type: number) {
