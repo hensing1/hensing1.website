@@ -7,17 +7,27 @@ import {
   imageInformation,
   imageComments,
 } from "../../db/digikam.ts";
+import { getBlogPageIcon, getShortName, toURL } from "./util.ts";
 
 const db = drizzle(process.env.DB_FILE_NAME!);
 
-export async function getBlogPageNames() {
+export async function getBlogPages() {
   let blogAlbums = await db
-    .select({ albumPath: albums.relativePath })
+    .select()
     .from(albums)
-    .where(eq(albums.collection, "Blog"));
+    .where(eq(albums.collection, "Blog"))
+    .orderBy(albums.date);
 
   return blogAlbums
-    .map((album) => album.albumPath.slice(1));
+    .map(album => {
+      const url = toURL(album.relativePath);
+      return {
+        ...album,
+        urlPart: url,
+        shortName: getShortName(album.relativePath),
+        icon: getBlogPageIcon(url)
+      };
+    });
 }
 
 export async function getBlogSectionsForPage(page: string) {

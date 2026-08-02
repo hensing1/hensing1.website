@@ -19,7 +19,7 @@
     grid-area: header;
     text-align: center;
 }
-.container > div.toolbar {
+.container > div.navbar {
     grid-area: menu;
     margin-left: 0.5em;
     margin-right: 1em;

@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import NavbarItem from "../../../components/NavbarItem.astro";
 import { getBlogPageIcon } from "../../../scripts/util.ts";
 
 import {
+  getBlogPages,
   getBlogEntriesForPage,
   selectPics,
   getAlbumsByTag,
@@ -31,6 +33,8 @@ export async function getStaticPaths() {
 }
 
 const { pageURL, entry, prev, next } = Astro.props;
+
+const blogPages = (await getBlogPages()).reverse();
 
 const pics = await selectPics([entry.id], 2);
 ---
@@ -78,10 +82,16 @@ h2 {
 }
 </style>
 
-<BaseLayout title={entry.name} icon={getBlogPageIcon(pageURL)} >
+<BaseLayout title="Photoblog" icon={getBlogPageIcon(pageURL)} >
+  <span slot="navbarContent">
+    {
+      blogPages.map(page => <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={false}
+                  link={`/photoblog/${page.urlPart}`} level={2} />)
+    }
+  </span>
   <h2>{entry.section}</h2>
   <h3>{new Date(entry.date!).toLocaleDateString()}
-    {entry.caption && <>{" - "} {entry.caption}</>}
+    {entry.caption && ` - ${entry.caption}`}
   </h3>
   <p style="display: flex; align-items: center; justify-content: space-between;">
     <a

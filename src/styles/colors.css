@@ -1,0 +1,7 @@
+:root {
+    --accent-1: oklch(83% 0.3 30deg);
+    --accent-2: oklch(83% 0.3 60deg);
+    --accent-3: oklch(83% 0.3 90deg);
+    --accent-4: oklch(83% 0.3 120deg);
+    --accent-5: oklch(81% 0.23 150);
+}

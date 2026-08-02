@@ -7,6 +7,10 @@ export function getBlogPageIcon(albumURL: string) {
   );
 }
 
+export function getShortName(albumRelativePath: string) {
+  return `${albumRelativePath.split("|").at(-1)!.trim()} ${albumRelativePath.slice(1).split("/")[0]}`;
+}
+
 export function toURL(albumName: string) {
   return albumName.slice(1).replaceAll(/[\/–—|]/g, "-").replaceAll(" ", "").toLowerCase();
 }

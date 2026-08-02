@@ -1,0 +1,124 @@
+---
+import "../styles/colors.css"
+const { icon, name, isCurrentPage, link, level } = Astro.props;
+
+const buttonScaleOnMobile = 1.15;
+
+const color = (() => {
+    switch (level) {
+        case 1: return "var(--accent-1)";
+        case 2: return "var(--accent-3)";
+        case 3: return "var(--accent-5)";
+        case 4: return "var(--accent-2)";
+        case 5: return "var(--accent-4)";
+        default: return "var(--accent-1)";
+    }
+})();
+
+---
+
+<style define:vars={{ buttonScaleOnMobile, level, color }}>
+    .navbarItem {
+        /* margin: auto; */
+        text-align: center;
+        min-width: 10em;
+        /* height: 2em; */
+        line-height: 2em;
+        border-radius: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 1em;
+        margin-left: 0.5em;
+        margin-right: 0.9em;
+        padding-bottom: 0.001em;
+
+        /* background-color: red; */
+        background-color: var(--color);
+        color: black;
+        box-shadow: 0.4em 0.4em;
+        transition: 0.3s;
+
+        /* Text non-selectable */
+        user-select: none;
+    }
+
+    .navbarItem.current {
+        /* filter: brightness(80%); */
+        transform: translate(0.2em, 0.2em);
+        box-shadow: 0.2em 0.2em;
+    }
+
+    .navbarItem:not(.current):hover {
+        transform: translate(-0.17em, -0.17em);
+        box-shadow: 0.57em 0.57em;
+    }
+
+    .iconAndNameContainer {
+        display: flex;
+    }
+
+    .navbarItem .icon {
+        margin-left: 0.92em;
+        margin-right: 0.08em;
+    }
+
+    .navbarItem .name {
+        flex-grow: 99;
+        margin-right: 1em;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    a {
+        /* display: block; */
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    @media screen and (max-width: 636px) {
+        .navbarItem.baseLevel {
+            min-width: unset;
+            width: 3.2em;
+            transform: scale(var(--buttonScaleOnMobile));
+        }
+
+        .navbarItem.baseLevel.current {
+            transform: translate(0.2em, 0.2em) scale(var(--buttonScaleOnMobile));
+        }
+
+        .navbarItem.baseLevel:not(.current):hover {
+            transform: translate(-0.17em, -0.17em)
+                scale(var(--buttonScaleOnMobile));
+        }
+
+        .navbarItem.baseLevel .name {
+            display: none;
+        }
+
+        .navbarItem:not(.baseLevel) {
+            display: none;
+        }
+    }
+</style>
+
+<div class=`navbarItem ${isCurrentPage ? "current": ""} ${level == 1 ? "baseLevel": ""}`>
+    {
+        isCurrentPage ? (
+            <div class="iconAndNameContainer">
+                <div class="icon">{icon}</div>
+                <p class="name">{name}</p>
+            </div>
+            <slot />
+        ) : (
+            <a href={link}>
+                <div class="iconAndNameContainer">
+                    <div class="icon">{icon}</div>
+                    <p class="name">{name}</p>
+                </div>
+            </a>
+        )
+    }
+</div>

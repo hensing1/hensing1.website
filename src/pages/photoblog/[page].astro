@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import NavbarItem from "../../components/NavbarItem.astro";
 import SectionComponent from "../../components/BlogPageSection.astro";
 
 import {
+  getBlogPages,
   getAlbumsByTag,
   getBlogSectionsForPage,
 } from "../../scripts/digikam_connector.ts";
@@ -23,6 +25,7 @@ export async function getStaticPaths() {
     };
   });
 }
+const blogPages = (await getBlogPages()).reverse();
 
 const { title: pageTitle, album: album } = Astro.props;
 
@@ -41,7 +44,21 @@ const sections = await getBlogSectionsForPage(album.relativePath);
   }
 </style>
 
-<BaseLayout icon={icon} title={pageTitle}>
+<BaseLayout icon={icon} title="Photoblog">
+  <span slot="navbarContent">
+  {
+    blogPages.map(page => page.relativePath == album.relativePath ?
+      <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={true}
+                  link={`/photoblog/${page.urlPart}`} level={2} >
+      {
+        sections.map(section => <NavbarItem name={section.name} level={3}/>)
+      }
+      </NavbarItem> :
+      <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={false}
+                  link={`/photoblog/${page.urlPart}`} level={2} />
+    )
+  }
+  </span>
   <h1>{pageTitle}</h1>
   <a href="/photoblog" id="back" class="redlink">&lt;- zurück</a>
   {

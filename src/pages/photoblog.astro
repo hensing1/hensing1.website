@@ -1,27 +1,29 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Masonry from "../components/ImageMasonry.astro";
+import NavbarItem from "../components/NavbarItem.astro";
 
-import { getAlbumsByPath, getAlbumsByTag, selectPics } from "../scripts/digikam_connector.ts";
+import { getBlogPages, getAlbumsByPath, getAlbumsByTag, selectPics } from "../scripts/digikam_connector.ts";
 
-import { toURL } from "../scripts/util.ts";
+import { getBlogPageIcon, getShortName, toURL } from "../scripts/util.ts";
 
 export const icon = "📸";
 export const title = "Photoblog";
 export const index = 1;
 
-const albums = await getAlbumsByTag("Blog");
+const subPages = (await getBlogPages()).reverse();
 const years = new Map();
 
-for (const album of albums) {
+for (const album of subPages) {
     const [year, albumName] = album.relativePath.substring(1).split(/\/(.*)/).slice(0, -1);
 
     const subAlbums = await getAlbumsByPath(`${album.relativePath}%`);
-    const numNestings = subAlbums.reduce((currMax, album) => Math.max(album.relativePath.split('/').length - 2, currMax), 0);
-    const pics = await selectPics(subAlbums.map(album => album.id), numNestings + 1); // triple-nested albums => only select pics with rating of 4 or higher
+    // const numNestings = subAlbums.reduce((currMax, album) => Math.max(album.relativePath.split('/').length - 2, currMax), 0);
+    // const pics = await selectPics(subAlbums.map(album => album.id), numNestings + 1); // triple-nested albums => only select pics with rating of 4 or higher
+    const pics = await selectPics(subAlbums.map(album => album.id), 4);
 
     if (!years.has(year)) { years.set(year, []); }
-    years.get(year).push({name: albumName, albumObject: album, subNestings: numNestings, pics: pics});
+    years.get(year).push({name: albumName, albumObject: album, /*subNestings: numNestings,*/ pics: pics});
 }
 ---
 
@@ -30,7 +32,7 @@ for (const album of albums) {
         border-bottom: 2px solid black;
     }
 
-    .single-file {
+    /* .single-file {
         display: none;
     }
 
@@ -42,17 +44,22 @@ for (const album of albums) {
         .double-file {
             display: none;
         }
-    }
+    } */
 </style>
 
 <BaseLayout icon={icon} title={title}>
+    {
+        subPages.map(page => 
+            <NavbarItem slot="navbarContent" icon={page.icon} name={page.shortName} isCurrentPage={false} link={`/photoblog/${page.urlPart}`} level={2} />
+        )
+    }
     <h1>Pinterest des Grauens</h1>
 
     {
-        Array.from(years.keys()).sort().reverse().map((year) => <>
+        Array.from(years.keys()).map((year) => <>
             <h2>{year}</h2>
             {
-                years.get(year).sort().reverse().map((entry: any) => <>
+                years.get(year).map((entry: any) => <>
                     <div class="text-with-button">
                         <h3 style="margin-top: 0">{entry.name}</h3>
                         <a href={`/photoblog/${toURL(entry.albumObject.relativePath)}`} class="redlink">-&gt; mehr davon</a>

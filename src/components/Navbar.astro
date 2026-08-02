@@ -1,0 +1,31 @@
+---
+import NavbarItem from "./NavbarItem.astro";
+
+const { currentPageName } = Astro.props;
+
+const pages = await Object.values(
+        import.meta.glob("../pages/*.astro", { eager: true })
+    ).toSorted((page1: any, page2: any) => page1.index - page2.index);
+---
+
+<style>
+    #navbar {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 1em;
+        align-items: flex-start;
+    }
+</style>
+
+<div id="navbar">
+    {
+        pages.map((page: any) => {
+            return page.title == currentPageName ? 
+                <NavbarItem icon={page.icon} name={page.title} isCurrentPage={true} link={page.url || "/"} level={1} >
+                    <slot />
+                </NavbarItem>
+            :
+                <NavbarItem icon={page.icon} name={page.title} isCurrentPage={false} link={page.url || "/"} level={1} />
+        })
+    }
+</div>
