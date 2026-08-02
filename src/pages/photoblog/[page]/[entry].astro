@@ -1,16 +1,18 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import NavbarItem from "../../../components/NavbarItem.astro";
-import { getBlogPageIcon } from "../../../scripts/util.ts";
+import LinkButton from "../../../components/LinkButton.astro";
 
 import {
   getBlogPages,
   getBlogEntriesForPage,
+  getBlogEntriesForSection,
+  getBlogSectionsForPage,
   selectPics,
   getAlbumsByTag,
 } from "../../../scripts/digikam_connector.ts";
 
-import { toURL } from "../../../scripts/util.ts";
+import { getBlogPageIcon, toURL } from "../../../scripts/util.ts";
 
 export async function getStaticPaths() {
   const blogRootAlbums = await getAlbumsByTag("Blog");
@@ -24,7 +26,7 @@ export async function getStaticPaths() {
         const next = index < entries.length - 1 ? entries[index + 1] : null;
         return {
           params: { page: toURL(page), entry: entry.name.toLowerCase() },
-          props: { pageURL: toURL(page), entry: entry, prev: prev, next: next },
+          props: { pageRelativePath: page, pageURL: toURL(page), entry: entry, prev: prev, next: next },
         };
       }),
     );
@@ -32,11 +34,22 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { pageURL, entry, prev, next } = Astro.props;
+const { pageRelativePath, pageURL, entry, prev, next } = Astro.props;
 
 const blogPages = (await getBlogPages()).reverse();
 
 const pics = await selectPics([entry.id], 2);
+
+const s = await getBlogSectionsForPage(pageRelativePath);
+let sections: any[] = [];
+for (const section of s) {
+  const entries = await getBlogEntriesForSection(pageRelativePath, section.name);
+  sections.push({
+    ...section,
+    entries: entries
+  });
+}
+console.log(entry.relativePath);
 ---
 <style>
 h2 {
@@ -80,43 +93,62 @@ h2 {
 .text-caption p {
   margin: 0;
 }
+#prevEntryButton {
+  margin-right: 1em;
+}
 </style>
+
+<!-- fuckass way to make the browser start at the bottom of the page -->
+<script>window.onload=() => window.scrollTo(0, document.body.scrollHeight)</script>
 
 <BaseLayout title="Photoblog" icon={getBlogPageIcon(pageURL)} >
   <span slot="navbarContent">
-    {
-      blogPages.map(page => <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={false}
-                  link={`/photoblog/${page.urlPart}`} level={2} />)
-    }
+  {
+    blogPages.map(page => page.relativePath == pageRelativePath ?
+      <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={true}
+                  link={`/photoblog/${page.urlPart}`} level={2} >
+      {
+        sections.map(section => {
+          const isCurrentSection = section.entries.some((e: any) => e.relativePath == entry.relativePath);
+          return <NavbarItem name={section.name} level={3} isCurrentPage={isCurrentSection}
+                  link={`/photoblog/${page.urlPart}/${section.entries[0].name.toLowerCase()}`}/>
+        })
+      }
+      </NavbarItem> :
+      <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={false}
+                  link={`/photoblog/${page.urlPart}`} level={2} />
+    )
+  }
   </span>
   <h2>{entry.section}</h2>
   <h3>{new Date(entry.date!).toLocaleDateString()}
     {entry.caption && ` - ${entry.caption}`}
   </h3>
   <p style="display: flex; align-items: center; justify-content: space-between;">
-    <a
-      class="redlink"
+    <LinkButton
       href={`/photoblog/${pageURL}`}
+      accentColor={3}
     >
       &lt;-- zurück
-    </a>
+    </LinkButton>
     <span>
       { prev && 
-        <a
-          class="redlink"
-          style="margin-right: 1em;"
-          href=`/photoblog/${pageURL}/${prev.name.toLowerCase()}`
-        >
-          &lt;- vorheriger Eintrag
-        </a>
+        <span id="prevEntryButton">
+          <LinkButton
+            href=`/photoblog/${pageURL}/${prev.name.toLowerCase()}`
+            accentColor={3}
+          >
+            &lt;- vorheriger Eintrag
+          </LinkButton>
+        </span>
       }
       { next && 
-        <a
-          class="redlink"
+        <LinkButton
           href=`/photoblog/${pageURL}/${next.name.toLowerCase()}`
+          accentColor={3}
         >
           nächster Eintrag -&gt;
-        </a>
+        </LinkButton>
       }
     </span>
   </p>

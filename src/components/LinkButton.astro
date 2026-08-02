@@ -1,0 +1,42 @@
+---
+import "../styles/colors.css";
+
+let { href, accentColor } = Astro.props;
+
+const color = (() => {
+    switch (accentColor) {
+        case 1: return "var(--accent-1)";
+        case 2: return "var(--accent-2)";
+        case 3: return "var(--accent-3)";
+        case 4: return "var(--accent-4)";
+        case 5: return "var(--accent-5)";
+        default: return "var(--accent-1)";
+    }
+})();
+---
+
+<style define:vars={{ color }}>
+    a {
+        display: inline-block;
+        background-color: var(--color);
+        line-height: 1.5em;
+        border-radius: 0.75em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        color: black;
+        box-shadow: 0.3em 0.3em;
+        text-decoration: none;
+        text-align: center;
+        font-size: medium;
+        user-select: none;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        transform: translate(-0.14em, -0.14em);
+        box-shadow: 0.44em 0.44em;
+    }
+</style>
+
+
+<a href={href}><slot /></a>

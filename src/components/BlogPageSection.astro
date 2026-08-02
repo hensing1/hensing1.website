@@ -1,5 +1,6 @@
 ---
 import ImageScrollGallery from "./ImageScrollGallery.astro";
+import LinkButton from "./LinkButton.astro";
 
 import {
   selectPics,
@@ -41,12 +42,12 @@ for (const entry of entries) {
             {entry.date && (
               <p style="display: flex; align-items: center; justify-content: space-between;">
                 <em>Datum: {new Date(entry.date).toLocaleDateString()}</em>
-                <a
-                  class="redlink"
+                <LinkButton
                   href={`/photoblog/${pageURL}/${entry.name.toLowerCase()}`}
+                  accentColor={3}
                 >
                   zum Tageseintrag -&gt;
-                </a>
+                </LinkButton>
               </p>
             )}
             <ImageScrollGallery images={entryPics[entry.relativePath]} />

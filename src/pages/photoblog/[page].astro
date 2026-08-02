@@ -1,12 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NavbarItem from "../../components/NavbarItem.astro";
+import LinkButton from "../../components/LinkButton.astro";
 import SectionComponent from "../../components/BlogPageSection.astro";
 
 import {
   getBlogPages,
   getAlbumsByTag,
   getBlogSectionsForPage,
+getBlogEntriesForPage,
+getBlogEntriesForSection,
 } from "../../scripts/digikam_connector.ts";
 import { getBlogPageIcon } from "../../scripts/util.ts";
 
@@ -31,7 +34,16 @@ const { title: pageTitle, album: album } = Astro.props;
 
 const icon = getBlogPageIcon(toURL(album.relativePath));
 
-const sections = await getBlogSectionsForPage(album.relativePath);
+const s = await getBlogSectionsForPage(album.relativePath);
+
+let sections: any[] = [];
+for (const section of s) {
+  const entries = await getBlogEntriesForSection(album.relativePath, section.name);
+  sections.push({
+    ...section,
+    firstEntry: entries[0]
+  });
+}
 ---
 
 <style>
@@ -51,7 +63,9 @@ const sections = await getBlogSectionsForPage(album.relativePath);
       <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={true}
                   link={`/photoblog/${page.urlPart}`} level={2} >
       {
-        sections.map(section => <NavbarItem name={section.name} level={3}/>)
+        sections.map(section => {
+          return <NavbarItem name={section.name} link={`/photoblog/${page.urlPart}/${section.firstEntry.name.toLowerCase()}`} level={3}/>
+        })
       }
       </NavbarItem> :
       <NavbarItem icon={page.icon} name={page.shortName} isCurrentPage={false}
@@ -60,7 +74,7 @@ const sections = await getBlogSectionsForPage(album.relativePath);
   }
   </span>
   <h1>{pageTitle}</h1>
-  <a href="/photoblog" id="back" class="redlink">&lt;- zurück</a>
+  <LinkButton href="/photoblog" id="back" accentColor={3}>&lt;- zurück</LinkButton>
   {
     sections.map((section) => <>
       <SectionComponent page={album.relativePath} pageURL={toURL(album.relativePath)} section={section.name} />
