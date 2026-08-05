@@ -69,7 +69,10 @@ export async function getBlogEntriesForSection(page: string, section: string) {
     .where(
       and(
         like(albums.relativePath, `${page}/${section}%`),
-        exists(db.select().from(images).where(eq(images.album, albums.id))),
+        exists(
+          db.select().from(images)
+            .innerJoin(imageInformation, eq(images.id, imageInformation.imageid))
+            .where(and(eq(images.album, albums.id), gte(imageInformation.rating, 2)))),
         // only select albums that actually have images in them
       ),
     )
