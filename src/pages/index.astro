@@ -6,12 +6,33 @@ export const icon = "🏠";
 export const title = "Home";
 export const index = 0;
 
-const fakten = await db.select().from(FaktDesTages);
+// const fakten = await db.select().from(FaktDesTages);
 ---
 
+<script>
+	const numHensings = 2;
+    const i = Math.floor(Math.random() * numHensings);
+	document.getElementById("hensing_img")!.setAttribute("src", `/img/hensing${i}.webp`);
+</script>
+
+<style>
+	#hensing_img {
+		width: 50%;
+		margin-top: 1em;
+		/* border-radius: 5px; */
+		float: right;	
+	}
+
+    @media screen and (max-width: 636px) {
+		#hensing_img {
+			width: 100%;
+			float: none;
+			margin: 0;
+		}
+	}
+</style>
+
 <BaseLayout icon={icon} title={title} addFloater={true}>
-	<p>Die Fakten sind:</p>
-	<ul>
-		{fakten.map(({ fakt }) => <li>{fakt}</li>)}
-	</ul>
+	<img id="hensing_img" />
+	<p><b>Hi!</b> <br/>Ich bin Henning, und das' die Website.</p>
 </BaseLayout>
